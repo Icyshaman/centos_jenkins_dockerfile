@@ -1,0 +1,17 @@
+cd /code_from_github
+sudo sshpass -p "<password of docker host account>" ssh -o "StrictHostKeyChecking no" <username>@<ip_address of docker host account>
+if ls | grep .html
+then
+sudo sshpass -p "<password of docker host account>" scp -r /code_from_github <username>@<ip_address of docker host account>:/code_from_github
+sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> docker run -dit -p 1234:80 -v /code_from_github:/usr/local/apache2/htdocs --name html_docker_image httpd:latest
+sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> curl --user "<user_name>:<password>" <URL to trigger jenkins job3 remotely>
+else
+if ls | grep .php
+then
+sudo sshpass -p "<password of docker host account>" scp -r /code_from_github <username>@<ip_address of docker host account>:/code_from_github
+sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> docker run -dit -p 1234:80 -v /code_from_github:/var/www/html --name php_docker_image vimal13/apache-webserver-php:latest
+sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> curl --user "<user_name>:<password>" <URL to trigger jenkins job3 remotely>
+else
+echo "File Format Not Supported"
+fi
+fi

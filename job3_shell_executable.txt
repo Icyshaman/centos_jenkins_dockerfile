@@ -1,0 +1,16 @@
+cd /code_from_github
+if ls | grep .html
+then
+FILENAME=`ls | grep .html`
+else
+FILENAME=`ls | grep .php`
+fi
+HTTP_CODE=`sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> curl -s -o /dev/null -w "%{http_code}" http://<ip address of docker host account>:1234/$FILENAME`
+if [ $HTTP_CODE -eq 200 ];
+then
+echo "OK"
+else
+sudo chown -R jenkins: /code_from_github
+sudo echo ${HTTP_CODE} > error_code.txt
+sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> curl --user "<user_name>:<password>" <URL to trigger jenkins job4 remotely>
+fi

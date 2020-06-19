@@ -1,0 +1,12 @@
+if ls | grep .html
+then
+CONTAINER_NAME="html_docker_image" 
+else
+CONTAINER_NAME="php_docker_image"
+fi
+if sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> docker ps -a | grep ${CONTAINER_NAME}
+then
+sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> docker start ${CONTAINER_NAME}
+else
+sudo sshpass -p "<password of docker host account>" ssh <username>@<ip_address of docker host account> curl --user "<user_name>:<password>" <URL to trigger jenkins job2 remotely>
+fi
